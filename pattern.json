@@ -1,0 +1,11 @@
+[
+    {
+      "name":"Example",
+      "bpm":100,
+      "samplemap":["Default/Kick.wav","Default/Snare.wav","Default/ClosedHat.wav"],
+      "pattern":[
+        {"volume":0,"samples":[0,2]},{"volume":0,"samples":[1,2]},{"volume":0,"samples":[0,2]},{"volume":0,"samples":[1,2]}
+      ]
+    }
+]
+  
