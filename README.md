@@ -5,6 +5,6 @@ Only supports .wav files currently.
 
 
 - [x] Loading beats
-- [] Editing/saving beats inside the program
-- [] GUI
+- [ ] Editing/saving beats inside the program
+- [ ] GUI
  
