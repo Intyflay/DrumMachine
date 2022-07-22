@@ -25,6 +25,7 @@ type Song struct {
 	Samplemap []string
 	Pattern   []Note
 	Bpm       uint
+	spb       time.Duration
 	//currentnote int
 }
 
@@ -42,6 +43,7 @@ type Song struct {
 // }
 
 func load(s *Song) Song {
+	s.spb = time.Minute / time.Duration(s.Bpm)
 	for _, v := range s.Samplemap {
 		f, err := os.Open(path.Join("Samples", v))
 		if err != nil {
@@ -59,7 +61,7 @@ func load(s *Song) Song {
 	return *s
 }
 
-func play(s Song) {
+func (s Song) play() {
 	format := beep.SampleRate(44100)
 	speaker.Init(beep.SampleRate(44100), format.N(time.Second/10))
 
@@ -70,7 +72,7 @@ func play(s Song) {
 			speaker.Play(s.samplemap[value].Streamer(0, s.samplemap[value].Len()))
 
 		}
-		time.Sleep(time.Minute / time.Duration(s.Bpm))
+		time.Sleep(s.spb)
 	}
 }
 
@@ -94,5 +96,5 @@ func main() {
 	// stop := make(chan struct{})
 	//go input(start, stop)
 
-	play(currentsong)
+	currentsong.play()
 }
