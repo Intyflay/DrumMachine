@@ -42,10 +42,13 @@ type Song struct {
 // 	}
 // }
 
-func load(s *Song) Song {
+func (s *Song) load() Song {
 	s.spb = time.Minute / time.Duration(s.Bpm)
-	for _, v := range s.Samplemap {
-		f, err := os.Open(path.Join("Samples", v))
+
+	var samples []beep.Buffer
+
+	for _, samplefile := range s.Samplemap {
+		f, err := os.Open(path.Join("Samples", samplefile))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -56,14 +59,15 @@ func load(s *Song) Song {
 		buf := beep.NewBuffer(format)
 		//beep.Resample(3,format.SampleRate)
 		buf.Append(streamer)
-		s.samplemap = append(s.samplemap, *buf)
+		samples = append(samples, *buf)
 	}
+	s.samplemap = samples
 	return *s
 }
 
 func (s Song) play() {
 	format := beep.SampleRate(44100)
-	speaker.Init(beep.SampleRate(44100), format.N(time.Second/10))
+	speaker.Init(format, format.N(time.Second/10))
 
 	for i := 0; true; i = (i + 1) % len(s.Pattern) {
 		fmt.Println(i)
@@ -88,7 +92,7 @@ func main() {
 	bytes, _ := ioutil.ReadAll(file)
 	json.Unmarshal(bytes, &songs)
 
-	var currentsong = load(&songs[0])
+	var currentsong = songs[0].load()
 	//fmt.Println(currentsong)
 	//fmt.Printf("%#v", currentsong)
 	//sequencer
